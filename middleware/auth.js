@@ -40,7 +40,7 @@ function auth(req, res, next) {
     req.displayname = payload.username;
     console.log("✅ Token verified. User ID:", req.userid);
     next();
-  } catch (err) {
+  } catch (err) {s
     console.error("❌ JWT verification failed:", err.message);
     return res.status(403).json({ message: "invalid or expired token" });
   }
