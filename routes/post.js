@@ -7,8 +7,7 @@ const path = require("path");
 const auth = require("../middleware/auth")
 const post = require("../database/postmodel")
 const router = express.Router();
-
-
+const addposttouser = require("../controller/addposttouser");
 
 const uploadDir = path.join(__dirname, "../uploads");
 console.log("Upload directory absolute path:", uploadDir);
@@ -30,10 +29,6 @@ const uploadLocal = multer({ storage: localStorage });
 
 
 router.post("/createpost",auth ,uploadLocal.single("image"),async (req, res) => {
-      console.log("🟢 POST /createpost called");
-      console.log("Headers:", req.headers["content-type"]);
-      console.log("Body:", req.body);
-      console.log("File:", req.file);
     try{
       if (!req.file) {
         return res.status(400).json({
@@ -57,8 +52,12 @@ router.post("/createpost",auth ,uploadLocal.single("image"),async (req, res) => 
         imageurl: result.secure_url, // cloud image
         author: req.userid,
       });
-
       await newpost.save();
+
+
+      // try to save photo of user in user posts
+      await addposttouser(req.userid,newpost._id)
+
 
       res.status(201).json({
         message: "Post uploaded successfully",
