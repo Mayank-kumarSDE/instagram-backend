@@ -12,6 +12,8 @@ const user = require("./database/usermodel.js")
 const registerroute = require("./routes/registeration.js");
 const postroute = require("./routes/post.js")
 const inforoute = require("./routes/inforoutes.js")
+const loginroute = require("./routes/login.js")
+const followroute = require("./routes/follow.js")
 
 const app = express();
 app.use(express.json());
@@ -21,8 +23,10 @@ app.use(cookieParser());
   try {
     await connectDB();
     app.use("/auth",registerroute)
+    app.use("/auths",loginroute)
     app.use("/posts", postroute);
     app.use("/profile",inforoute);
+    app.use("/follow",followroute);
     app.get("/test", (req, res) => {
         res.json({ message: "Test works!" });
     });
