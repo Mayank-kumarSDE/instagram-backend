@@ -7,7 +7,7 @@ async function loginuser(req,res){
         if(!username || !password){
             return res.status(400).json({message :"username and password both is required"})
         }
-        const currentuser = await user.findOne({ username: username.toLowerCase() });
+        const currentuser = await user.findOne({ username: username.toLowerCase() }).select('+password');
         if (!currentuser) {
             return res.status(400).json({ message: "Invalid username or password" });
         }
