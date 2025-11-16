@@ -21,8 +21,9 @@ module.exports = auth;
 */
 
 const Jwt = require("jsonwebtoken");
+const client = require("../config/redisconfig")
 
-function auth(req, res, next) {
+async function auth(req, res, next) {
   console.log("🔵 Auth middleware triggered");
   console.log("Cookies:", req.cookies);
   
@@ -34,7 +35,13 @@ function auth(req, res, next) {
   }
   
   try {
-    console.log("🔑 Token found, verifying...");
+    console.log(" checking redis blacklist ...");
+    const isblocked = await client.exists(`token:${token}`)
+    if(isblocked){
+      console.log("⛔ Token is blacklisted");
+      return res.status(403).json({ message: "Token is invalid or logged out" });
+    }
+    console.log("🔑 Verifying token...");
     const payload = Jwt.verify(token, "mayank");
     req.userid = payload.id;
     req.displayname = payload.username;

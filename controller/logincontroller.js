@@ -18,7 +18,7 @@ async function loginuser(req,res){
         const token = jwt.sign({ id: currentuser._id,username:currentuser.username , email:currentuser.email},"mayank", { expiresIn: "2h" })
         res.cookie("token",token);
         return res.status(200).json({message:"login successfully",
-            user:{
+            user:{ 
                 username : currentuser.username,
                 email : currentuser.email
             }

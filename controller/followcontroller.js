@@ -35,7 +35,7 @@ async function follow(req,res){
         await user.findByIdAndUpdate(userid , {$push : {following:whouwanttofollowprofile._id},});
         console.log(`${whouwanttofollow} has been added into following list`);
         await user.findByIdAndUpdate(whouwanttofollowprofile._id, {$push : {followers:userid},});
-        console.log(`${userid} has been added into followers list`);
+        console.log(`${username} has been added into followers list`);
 
         return res.status(200).json({ message: "Successfully followed user", followedUser: whouwanttofollow});
 
